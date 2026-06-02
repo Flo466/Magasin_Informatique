@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Passer une commande</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="login-container" style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+        <div class="login-box" style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 400px;">
+            <h2 style="text-align: center; color: #333;">Nouvelle Commande</h2>
+            
+            <form action="/client/{{ id_client }}/commander" method="POST">
+                
+                <label for="id_produit" style="display: block; margin-top: 15px; font-weight: bold;">Choisir un produit :</label>
+                <select name="id_produit" id="id_produit" required style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc;">
+                    {% for produit in produits %}
+                        <option value="{{ produit.id }}">{{ produit.nom }} ({{ produit.prix }}€) - Stock : {{ produit.stock }}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="quantite" style="display: block; margin-top: 15px; font-weight: bold;">Quantité souhaitée :</label>
+                <input type="number" name="quantite" id="quantite" min="1" value="1" required style="width: 95%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc;">
+
+                <button type="submit" style="width: 100%; background: linear-gradient(135deg, #6e8efb, #a777e3); color: white; padding: 12px; border: none; border-radius: 5px; font-weight: bold; margin-top: 20px; cursor: pointer;">
+                    🚀 Valider la commande
+                </button>
+            </form>
+            
+            <div style="text-align: center; margin-top: 15px;">
+                <a href="/client/{{ id_client }}" style="color: #666; text-decoration: none; font-size: 14px;">❌ Annuler et retourner à mon espace</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
