@@ -148,3 +148,37 @@ button:active {
     top: 20px;
     right: 20px;
 }
+/* PAGE COMMANDE */
+
+.commande-box {
+    background: white;
+    width: 420px;
+    margin: 40px auto;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0px 10px 25px rgba(0,0,0,0.25);
+    text-align: center;
+}
+
+.commande-box label {
+    display: block;
+    text-align: left;
+    font-weight: bold;
+    margin-top: 15px;
+    color: #333;
+}
+
+.commande-box select,
+.commande-box input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.commande-box button {
+    margin-top: 20px;
+    width: 100%;
+}

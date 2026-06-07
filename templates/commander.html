@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Commander un produit</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <h1>Passer une commande</h1>
+
+    <form method="POST">
+        <label>Choisir un produit :</label>
+        <select name="id_produit" required>
+            {% for produit in produits %}
+                <option value="{{ produit[0] }}">
+                    {{ produit[1] }} - {{ produit[2] }} €
+                </option>
+            {% endfor %}
+        </select>
+
+        <br><br>
+
+        <label>Quantité :</label>
+        <input type="number" name="quantite" min="1" required>
+
+        <br><br>
+
+        <button type="submit">Commander</button>
+    </form>
+
+    <br>
+
+    <a href="/client/{{ id_client }}">Retour espace client</a>
+
+</body>
+</html>

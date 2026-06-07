@@ -3,7 +3,7 @@
 </head>
 <h2>Espace Admin</h2>
 
-<a href="/">Se déconnecter1</a>
+<a href="/">Se Déconnecter</a>
 
 <h3>Produits :</h3>
 
@@ -37,4 +37,25 @@
     <td>{{ c.email }}</td>
 </tr>
 {% endfor %}
+</table>
+</table>
+
+<h3>Commandes :</h3>
+
+<table>
+    <tr>
+        <th>ID commande</th>
+        <th>ID client</th>
+        <th>ID produit</th>
+        <th>Quantité</th>
+    </tr>
+
+    {% for co in commandes %}
+    <tr>
+        <td>{{ co.id }}</td>
+        <td>{{ co.id_client }}</td>
+        <td>{{ co.id_produit }}</td>
+        <td>{{ co.quantite }}</td>
+    </tr>
+    {% endfor %}
 </table>

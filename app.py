@@ -8,7 +8,7 @@ db = mysql.connector.connect(
     host="127.0.0.1",
     port=3306,
     user="root",
-    password="root",
+    password="",
     database="magasin_informatique"
 )
 
@@ -72,8 +72,30 @@ def admin():
 
     cursor.execute("SELECT * FROM clients")
     clients = cursor.fetchall()
+    cursor.execute("SELECT * FROM commandes")
+    commandes = cursor.fetchall()
 
-    return render_template("admin.html", produits=produits, clients=clients)
 
+    return render_template("admin.html", produits=produits, clients=clients, commandes=commandes)
+@app.route("/client/<int:id_client>/commander", methods=["GET", "POST"])
+def commander(id_client):
+    cursor = db.cursor()
+
+    if request.method == "POST":
+        id_produit = request.form["id_produit"]
+        quantite = request.form["quantite"]
+
+        cursor.execute(
+            "INSERT INTO commandes (id_client, id_produit, quantite) VALUES (%s, %s, %s)",
+            (id_client, id_produit, quantite)
+        )
+        db.commit()
+
+        return redirect(f"/client/{id_client}")
+
+    cursor.execute("SELECT id_produit, nom, prix FROM produits")
+    produits = cursor.fetchall()
+
+    return render_template("commander.html", produits=produits, id_client=id_client)
 
 app.run(debug=True)
