@@ -1,68 +1,63 @@
 <head>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <h2>Espace Admin</h2>
 
-<<<<<<< HEAD
 <a href="/">Se Déconnecter</a>
-=======
-<a href="/">Se déconnecter1</a>
->>>>>>> 4c3ddc602648f48a3852ab9e62623cee135d6735
 
 <h3>Produits :</h3>
 
 <table border="1">
-<tr>
-    <th>Nom</th>
-    <th>Prix</th>
-    <th>Stock</th>
-</tr>
+    <tr>
+        <th>Nom</th>
+        <th>Prix</th>
+        <th>Stock</th>
+    </tr>
 
-{% for p in produits %}
-<tr>
-    <td>{{ p.nom }}</td>
-    <td>{{ p.prix }}</td>
-    <td>{{ p.stock }}</td>
-</tr>
-{% endfor %}
+    {% for p in produits %}
+    <tr>
+        <td>{{ p.nom }}</td>
+        <td>{{ p.prix }}</td>
+        <td>{{ p.stock }}</td>
+    </tr>
+    {% endfor %}
 </table>
 
 <h3>Clients :</h3>
 
 <table border="1">
-<tr>
-    <th>Nom</th>
-    <th>Email</th>
-</tr>
-
-{% for c in clients %}
-<tr>
-    <td>{{ c.nom }}</td>
-    <td>{{ c.email }}</td>
-</tr>
-{% endfor %}
-</table>
-<<<<<<< HEAD
-</table>
-
-<h3>Commandes :</h3>
-
-<table>
     <tr>
-        <th>ID commande</th>
-        <th>ID client</th>
-        <th>ID produit</th>
-        <th>Quantité</th>
+        <th>Nom</th>
+        <th>Email</th>
     </tr>
 
-    {% for co in commandes %}
+    {% for c in clients %}
     <tr>
-        <td>{{ co.id }}</td>
-        <td>{{ co.id_client }}</td>
-        <td>{{ co.id_produit }}</td>
-        <td>{{ co.quantite }}</td>
+        <td>{{ c.nom }}</td>
+        <td>{{ c.email }}</td>
     </tr>
     {% endfor %}
 </table>
-=======
->>>>>>> 4c3ddc602648f48a3852ab9e62623cee135d6735
+<<<<<<< HEAD </table>
+
+    <h3>Commandes :</h3>
+
+    <table>
+        <tr>
+            <th>ID commande</th>
+            <th>ID client</th>
+            <th>ID produit</th>
+            <th>Quantité</th>
+        </tr>
+
+        {% for co in commandes %}
+        <tr>
+            <td>{{ co.id }}</td>
+            <td>{{ co.id_client }}</td>
+            <td>{{ co.id_produit }}</td>
+            <td>{{ co.quantite }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    =======
+    >>>>>>> 4c3ddc602648f48a3852ab9e62623cee135d6735
