@@ -38,26 +38,24 @@
     </tr>
     {% endfor %}
 </table>
-<<<<<<< HEAD </table>
+</table>
 
-    <h3>Commandes :</h3>
+<h3>Commandes :</h3>
 
-    <table>
-        <tr>
-            <th>ID commande</th>
-            <th>ID client</th>
-            <th>ID produit</th>
-            <th>Quantité</th>
-        </tr>
+<table>
+    <tr>
+        <th>ID commande</th>
+        <th>ID client</th>
+        <th>ID produit</th>
+        <th>Quantité</th>
+    </tr>
 
-        {% for co in commandes %}
-        <tr>
-            <td>{{ co.id }}</td>
-            <td>{{ co.id_client }}</td>
-            <td>{{ co.id_produit }}</td>
-            <td>{{ co.quantite }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-    =======
-    >>>>>>> 4c3ddc602648f48a3852ab9e62623cee135d6735
+    {% for co in commandes %}
+    <tr>
+        <td>{{ co.id }}</td>
+        <td>{{ co.id_client }}</td>
+        <td>{{ co.id_produit }}</td>
+        <td>{{ co.quantite }}</td>
+    </tr>
+    {% endfor %}
+</table>
