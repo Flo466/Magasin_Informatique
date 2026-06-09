@@ -1,4 +1,5 @@
-CREATE DATABASE magasin_informatique;
+DROP DATABASE IF EXISTS magasin_informatique;
+CREATE DATABASE magasin_informatique CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE magasin_informatique;
 CREATE TABLE clients (
     id INT AUTO_INCREMENT,
