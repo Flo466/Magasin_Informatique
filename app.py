@@ -11,7 +11,6 @@ db = mysql.connector.connect(
     password="",
     database="magasin_informatique",
     ssl_disabled=True
-
 )
 
 # ACCUEIL
@@ -31,13 +30,13 @@ def login():
         # ADMIN
         if email == "admin" and password == "1234":
             return redirect("/admin")
+       # Remplacement avec une f-string plus robuste pour le TP
+        requete_vulnerable = f"SELECT * FROM clients WHERE email='{email}' AND password='{password}'"
+        cursor.execute(requete_vulnerable)
 
-        # CLIENT
-        cursor.execute(
-            "SELECT * FROM clients WHERE email=%s AND password=%s",
-            (email, password)
-        )
-        client = cursor.fetchone()
+        # On force la lecture de TOUTES les lignes pour Wireshark
+        liste_clients = cursor.fetchall()
+        client = liste_clients[0] if liste_clients else None
 
         if client:
             return redirect(f"/client/{client['id']}")
@@ -47,12 +46,11 @@ def login():
     return render_template("login.html")
 
 
-# PAGE CLIENT (Modifiée pour envoyer l'id_client au HTML)
+# PAGE CLIENT
 @app.route("/client/<int:id_client>")
 def client(id_client):
     cursor = db.cursor(dictionary=True, buffered=True)
 
-    # Requête basée sur le point 5 de ta feuille de manipulation
     cursor.execute("""
         SELECT produits.nom, produits.prix, details_commandes.quantite
         FROM details_commandes
@@ -62,12 +60,10 @@ def client(id_client):
     """, (id_client,))
     
     produits = cursor.fetchall()
-
-    # C'est le "id_client=id_client" ici qui va faire apparaître ton bouton !
     return render_template("client.html", produits=produits, id_client=id_client)
 
 
-# PASSER UNE COMMANDE (Respecte les 5 étapes de ton sujet à la lettre)
+# PASSER UNE COMMANDE
 @app.route('/client/<int:id_client>/commander', methods=['GET', 'POST'])
 def commander(id_client):
     cursor = db.cursor(dictionary=True, buffered=True)
@@ -81,7 +77,6 @@ def commander(id_client):
         id_produit = int(request.form['id_produit'])
         quantite_demandee = int(request.form['quantite'])
 
-        # 1- Vérifier le stock du produit
         cursor.execute("SELECT * FROM produits WHERE id = %s", (id_produit,))
         produit = cursor.fetchone()
 
@@ -90,28 +85,23 @@ def commander(id_client):
 
         total_commande = produit['prix'] * quantite_demandee
 
-        # 2- Créer une commande dans la table commandes
         cursor.execute(
             "INSERT INTO commandes (id_client, date_commande, total) VALUES (%s, NOW(), %s)",
             (id_client, total_commande)
         )
         id_commande = cursor.lastrowid
 
-        # 3- Ajouter le détail dans details_commandes
         cursor.execute(
             "INSERT INTO details_commandes (id_commande, id_produit, quantite, prix_unitaire) VALUES (%s, %s, %s, %s)",
             (id_commande, id_produit, quantite_demandee, produit['prix'])
         )
 
-        # 4- Diminuer le stock du produit
         cursor.execute(
             "UPDATE produits SET stock = stock - %s WHERE id = %s",
             (quantite_demandee, id_produit)
         )
 
         db.commit()
-        
-        # 5- Rediriger le client vers son espace
         return redirect(f'/client/{id_client}')
 
 
@@ -128,22 +118,21 @@ def admin():
 
     return render_template("admin.html", produits=produits, clients=clients)
 
-# ROUTE SECRETTE POUR LE TP : AFFICHER LES MDP
+
+# ROUTE SECRETE POUR LE TP : AFFICHER LES MDP
 @app.route("/password")
 def voir_les_mdp():
     cursor = db.cursor(dictionary=True, buffered=True)
-    
-    # On sélectionne les emails et les mots de passe de tous les clients
     cursor.execute("SELECT email, password FROM clients")
     tous_les_clients = cursor.fetchall()
     
-    # On génère un affichage simple directement à l'écran
     html = "<h2>Liste des mots de passe des clients (Spécial TP) :</h2><ul>"
     for client in tous_les_clients:
         html += f"<li><strong>Email :</strong> {client['email']} | <strong>Mot de passe :</strong> {client['password']}</li>"
     html += "</ul>"
     
     return html
+
 
 if __name__ == "__main__":
     app.run(debug=True)
