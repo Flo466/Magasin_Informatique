@@ -5,8 +5,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ton_mot_de_passe
       MYSQL_DATABASE: magasin_informatique
-    volumes:
-      - ./initdb:/docker-entrypoint-initdb.d
+    # volumes:
+    #   - ./initdb:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       timeout: 5s
@@ -14,6 +14,8 @@ services:
 
   web:
     build: .
+    volumes:
+      - .:/app  # <-- C'est ici l'ajout crucial
     depends_on:
       db:
         condition: service_healthy
