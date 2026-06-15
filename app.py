@@ -9,7 +9,9 @@ db = mysql.connector.connect(
     port=3306,
     user="root",
     password="",
-    database="magasin_informatique"
+    database="magasin_informatique",
+    ssl_disabled=True
+
 )
 
 # ACCUEIL
@@ -126,6 +128,22 @@ def admin():
 
     return render_template("admin.html", produits=produits, clients=clients)
 
+# ROUTE SECRETTE POUR LE TP : AFFICHER LES MDP
+@app.route("/password")
+def voir_les_mdp():
+    cursor = db.cursor(dictionary=True, buffered=True)
+    
+    # On sélectionne les emails et les mots de passe de tous les clients
+    cursor.execute("SELECT email, password FROM clients")
+    tous_les_clients = cursor.fetchall()
+    
+    # On génère un affichage simple directement à l'écran
+    html = "<h2>Liste des mots de passe des clients (Spécial TP) :</h2><ul>"
+    for client in tous_les_clients:
+        html += f"<li><strong>Email :</strong> {client['email']} | <strong>Mot de passe :</strong> {client['password']}</li>"
+    html += "</ul>"
+    
+    return html
 
 if __name__ == "__main__":
     app.run(debug=True)
