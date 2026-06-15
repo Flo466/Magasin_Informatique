@@ -1,4 +1,5 @@
 import os
+import bcrypt
 from flask import Flask, render_template, request, redirect
 from mysql.connector import pooling
 
@@ -26,19 +27,25 @@ def accueil():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        email, password = request.form["email"], request.form["password"]
+        email = request.form["email"]
+        password = request.form["password"]
+        
+        # Bypass admin (à retirer en prod)
         if email == "admin" and password == "1234":
             return redirect("/admin")
 
         conn = get_db()
         cursor = conn.cursor(dictionary=True, buffered=True)
-        cursor.execute("SELECT id FROM clients WHERE email=%s AND password=%s", (email, password))
+        cursor.execute("SELECT id, password FROM clients WHERE email=%s", (email,))
         client = cursor.fetchone()
-        cursor.close(); conn.close()
+        cursor.close()
+        conn.close()
 
-        if client:
+        if client and bcrypt.checkpw(password.encode('utf-8'), client['password'].encode('utf-8')):
             return redirect(f"/client/{client['id']}")
-        return "Erreur login"
+            
+        return "Erreur login : identifiants incorrects"
+        
     return render_template("login.html")
 
 # PAGE CLIENT
@@ -54,7 +61,8 @@ def client(id_client):
         WHERE c.id_client = %s
     """, (id_client,))
     produits = cursor.fetchall()
-    cursor.close(); conn.close()
+    cursor.close()
+    conn.close()
     return render_template("client.html", produits=produits, id_client=id_client)
 
 # PAGE ADMIN
@@ -68,7 +76,8 @@ def admin():
     c = cursor.fetchall()
     cursor.execute("SELECT * FROM commandes")
     cmd = cursor.fetchall()
-    cursor.close(); conn.close()
+    cursor.close()
+    conn.close()
     return render_template("admin.html", produits=p, clients=c, commandes=cmd)
 
 # PAGE COMMANDER
@@ -90,16 +99,19 @@ def commander(id_client):
                            (id_cmd, id_prod, qte, prod[1]))
             cursor.execute("UPDATE produits SET stock = stock - %s WHERE id=%s", (qte, id_prod))
             conn.commit()
-            cursor.close(); conn.close()
+            cursor.close()
+            conn.close()
             return redirect(f"/client/{id_client}")
         
-        cursor.close(); conn.close()
+        cursor.close()
+        conn.close()
         return render_template("erreur_stock.html", id_client=id_client)
 
     cursor = conn.cursor(dictionary=True)
     cursor.execute("SELECT id, nom, prix FROM produits WHERE stock > 0")
     produits = cursor.fetchall()
-    cursor.close(); conn.close()
+    cursor.close()
+    conn.close()
     return render_template("commander.html", produits=produits, id_client=id_client)
 
 if __name__ == "__main__":
