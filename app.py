@@ -11,7 +11,6 @@ db = mysql.connector.connect(
     user="root",
     password="",
     database="magasin_informatique",
-    ssl_disabled=True
 )
 
 # ------------------------------------------------------------------------
