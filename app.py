@@ -8,7 +8,7 @@ from mysql.connector import pooling
 app = Flask(__name__)
 
 # ====================================================================================================
-# /////////////////////////////////////// DATABASE CONFIGURATION /////////////////////////////////////
+# 💾 ////////////////////////////////// DATABASE CONFIGURATION ///////////////////////////////////////
 # ====================================================================================================
 db_config = {
     "host": os.getenv("DB_HOST", "db"),
@@ -24,7 +24,7 @@ def get_db():
 
 
 # ====================================================================================================
-# //////////////////////////////////////////// HOME ROUTE ////////////////////////////////////////////
+# 🏠 //////////////////////////////////////////// HOME ROUTE //////////////////////////////////////////
 # ====================================================================================================
 @app.route("/")
 def accueil():
@@ -32,7 +32,7 @@ def accueil():
 
 
 # ====================================================================================================
-# /////////////////////////////////////////// LOGIN ROUTE ////////////////////////////////////////////
+# 🔑 /////////////////////////////////////////// LOGIN ROUTE //////////////////////////////////////////
 # ====================================================================================================
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -40,11 +40,13 @@ def login():
         email = request.form["email"]
         password = request.form["password"]
         
+        # Bypass for admin
         if email == "admin" and password == "1234":
             return redirect("/admin")
 
         conn = get_db()
         cursor = conn.cursor(dictionary=True, buffered=True)
+        # Check if account is verified
         cursor.execute("SELECT id, password, is_verified FROM clients WHERE email=%s", (email,))
         client = cursor.fetchone()
         cursor.close()
@@ -61,7 +63,7 @@ def login():
 
 
 # ====================================================================================================
-# /////////////////////////////////////// CLIENT DASHBOARD ROUTE /////////////////////////////////////
+# 👤 /////////////////////////////////////// CLIENT DASHBOARD ROUTE //////////////////////////////////
 # ====================================================================================================
 @app.route("/client/<int:id_client>")
 def client(id_client):
@@ -81,7 +83,7 @@ def client(id_client):
 
 
 # ====================================================================================================
-# ///////////////////////////////////////// ADMIN DASHBOARD ROUTE ////////////////////////////////////
+# 🛡️ /////////////////////////////////////// ADMIN DASHBOARD ROUTE //////////////////////////////////
 # ====================================================================================================
 @app.route("/admin")
 def admin():
@@ -99,7 +101,7 @@ def admin():
 
 
 # ====================================================================================================
-# /////////////////////////////////////////// ORDERING ROUTE /////////////////////////////////////////
+# 🛒 /////////////////////////////////////////// ORDERING ROUTE ///////////////////////////////////////
 # ====================================================================================================
 @app.route("/client/<int:id_client>/commander", methods=["GET", "POST"])
 def commander(id_client):
@@ -136,7 +138,7 @@ def commander(id_client):
 
 
 # ====================================================================================================
-# ///////////////////////////////////////////// SIGNUP ROUTE /////////////////////////////////////////
+# 📝 ///////////////////////////////////////////// SIGNUP ROUTE ///////////////////////////////////////
 # ====================================================================================================
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
@@ -148,11 +150,13 @@ def signup():
         telephone = request.form.get("telephone")
         password = request.form["password"]
 
+        # Validate password strength
         if len(password) < 8: return "Password too short."
         if not re.search(r"[A-Z]", password) or not re.search(r"[0-9]", password):
             return "Uppercase letter and digit required."
 
         hashed_pw = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        # Generate 6-digit verification code
         code = str(secrets.randbelow(900000) + 100000)
 
         conn = get_db()
@@ -163,16 +167,18 @@ def signup():
             if cursor.fetchone():
                 return "Email already taken."
 
+            # Insert user (default is_verified = 0)
             sql = """INSERT INTO clients (nom, prenom, email, adresse, telephone, password) 
                      VALUES (%s, %s, %s, %s, %s, %s)"""
             cursor.execute(sql, (nom, prenom, email, adresse, telephone, hashed_pw.decode('utf-8')))
             user_id = cursor.lastrowid
             
+            # Store verification code
             cursor.execute("INSERT INTO email_verification (id_client, token) VALUES (%s, %s)", 
                            (user_id, code))
             
             conn.commit()
-            # Success: Render the success page with the code
+            # Redirect to success page displaying the code
             return render_template("signup_success.html", code=code, id=user_id)
             
         except Exception as e:
@@ -185,9 +191,8 @@ def signup():
     return render_template("signup.html")
 
 
-
 # ====================================================================================================
-# ///////////////////////////////////////// CODE VERIFICATION ////////////////////////////////////////
+# ✅ ///////////////////////////////////////// CODE VERIFICATION //////////////////////////////////////
 # ====================================================================================================
 @app.route("/enter-code", methods=["GET", "POST"])
 def enter_code():
@@ -200,7 +205,9 @@ def enter_code():
         try:
             cursor.execute("SELECT id_client FROM email_verification WHERE id_client=%s AND token=%s", (user_id, user_code))
             if cursor.fetchone():
+                # Activate account
                 cursor.execute("UPDATE clients SET is_verified = 1 WHERE id = %s", (user_id,))
+                # Remove code after usage
                 cursor.execute("DELETE FROM email_verification WHERE id_client = %s", (user_id,))
                 conn.commit()
                 return "Account activated! <a href='/login'>Log in here</a>"
