@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Inscription</title>
+</head>
+
+<body>
+    <div class="center-form">
+        <div class="login-box">
+            <h2>Inscription</h2>
+            <form method="POST" id="signupForm">
+                <input type="text" name="nom" placeholder="Nom" required><br>
+                <input type="text" name="prenom" placeholder="Prénom" required><br>
+                <input type="email" name="email" placeholder="Email" required><br>
+                <input type="text" name="adresse" placeholder="Adresse"><br>
+                <input type="tel" name="telephone" placeholder="Téléphone"><br>
+
+                <input type="password" id="password" name="password" placeholder="Mot de passe" required>
+                <div id="password-hint" style="font-size: 12px; color: #666; margin-bottom: 10px;">
+                    Min. 8 caractères, une majuscule et un chiffre.
+                </div>
+
+                <button type="submit" id="submitBtn">S'inscrire</button>
+            </form>
+            <p>Déjà un compte ? <a href="/login">Connectez-vous</a></p>
+        </div>
+    </div>
+
+    <script>
+        const passwordInput = document.getElementById('password');
+        const hint = document.getElementById('password-hint');
+
+        passwordInput.addEventListener('input', function () {
+            const val = this.value;
+            const hasUpper = /[A-Z]/.test(val);
+            const hasDigit = /[0-9]/.test(val);
+            const isLong = val.length >= 8;
+
+            if (val.length === 0) {
+                hint.textContent = "Min. 8 caractères, une majuscule et un chiffre.";
+                hint.style.color = "#666";
+            } else if (hasUpper && hasDigit && isLong) {
+                hint.textContent = "Mot de passe valide !";
+                hint.style.color = "green";
+            } else {
+                hint.textContent = "Faible : " +
+                    (!isLong ? "trop court " : "") +
+                    (!hasUpper ? "manque majuscule " : "") +
+                    (!hasDigit ? "manque chiffre" : "");
+                hint.style.color = "red";
+            }
+        });
+    </script>
+</body>
+
+</html>

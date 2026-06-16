@@ -1,4 +1,5 @@
 import os
+import re
 import bcrypt
 from flask import Flask, render_template, request, redirect
 from mysql.connector import pooling
@@ -113,6 +114,50 @@ def commander(id_client):
     cursor.close()
     conn.close()
     return render_template("commander.html", produits=produits, id_client=id_client)
+
+@app.route("/signup", methods=["GET", "POST"])
+def signup():
+    if request.method == "POST":
+        nom = request.form["nom"]
+        prenom = request.form["prenom"]
+        email = request.form["email"]
+        adresse = request.form.get("adresse")
+        telephone = request.form.get("telephone")
+        password = request.form["password"]
+
+        # --- VALIDATION MOT DE PASSE ---
+        # 1. Longueur min 8
+        # 2. Au moins une majuscule, une minuscule et un chiffre (optionnel mais conseillé)
+        if len(password) < 8:
+            return "Le mot de passe doit faire au moins 8 caractères."
+        if not re.search(r"[A-Z]", password) or not re.search(r"[0-9]", password):
+            return "Le mot de passe doit contenir au moins une majuscule et un chiffre."
+        # -------------------------------
+
+        hashed_pw = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+
+        conn = get_db()
+        cursor = conn.cursor(buffered=True)
+        
+        try:
+            cursor.execute("SELECT id FROM clients WHERE email = %s", (email,))
+            if cursor.fetchone():
+                return "Cet email est déjà utilisé."
+
+            sql = """INSERT INTO clients (nom, prenom, email, adresse, telephone, password) 
+                     VALUES (%s, %s, %s, %s, %s, %s)"""
+            cursor.execute(sql, (nom, prenom, email, adresse, telephone, hashed_pw.decode('utf-8')))
+            
+            conn.commit()
+            return redirect("/login")
+            
+        except Exception as e:
+            return f"Erreur critique : {e}"
+        finally:
+            cursor.close()
+            conn.close()
+            
+    return render_template("signup.html")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

@@ -3,22 +3,17 @@
 
 <head>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Bienvenue</title>
 </head>
 
 <body class="accueil">
-
     <div class="overlay">
-
-        <h1 style="color:white; font-size:40px;">
-            Bienvenue dans le magasin informatique
-        </h1>
-
-        <a href="/login" style="font-size:20px;">
-            Se connecter
-        </a>
-
+        <h1 style="color:white; font-size:40px;">Bienvenue dans le magasin informatique</h1>
+        <div class="actions">
+            <a href="/login" class="btn">Se connecter</a>
+            <a href="/signup" class="btn">Créer un compte</a>
+        </div>
     </div>
-
 </body>
 
 </html>
