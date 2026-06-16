@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Vérification du code</title>
+</head>
+
+<body>
+    <div class="center-form">
+        <div class="login-box">
+            <h2>Vérification</h2>
+            <p>Entrez le code reçu pour activer votre compte :</p>
+            <form method="POST">
+                <input type="text" name="code" placeholder="6 chiffres" required maxlength="6"><br>
+                <button type="submit">Valider</button>
+            </form>
+            <p><a href="/signup">Retour à l'inscription</a></p>
+        </div>
+    </div>
+</body>
+
+</html>
