@@ -28,7 +28,7 @@ body.accueil {
    BOUTONS & LIENS (Dégradés unifiés)
    ========================================== */
 /* Style de base partagé par tous les boutons */
-a.btn, button, .btn-logout, .btn-delete {
+a.btn, button, .btn-logout, .btn-delete, .btn-validate {
     display: inline-block;
     padding: 12px 24px;
     text-decoration: none;
@@ -56,7 +56,7 @@ a.btn, button {
     right: 20px;
 }
 
-/* Dégradé suppression (Rouge/Orange) - Pour le panier */
+/* Dégradé suppression (Rouge/Rose) - Pour le panier */
 .btn-delete {
     background: linear-gradient(90deg, #d534b5, #c02163);
     padding: 6px 12px;
@@ -65,18 +65,23 @@ a.btn, button {
     color: white;
     border-radius: 8px;
     font-weight: bold;
-    display: inline-block; /* Très important pour qu'il reste dans le tableau */
+    display: inline-block; 
+}
+
+/* Dégradé validation (Vert dynamique) */
+.btn-validate {
+    background: linear-gradient(90deg, #38ef7d, #2575fc);
 }
 
 /* Effets Hover communs */
-a.btn:hover, button:hover, .btn-logout:hover, .btn-delete:hover {
+a.btn:hover, button:hover, .btn-logout:hover, .btn-delete:hover, .btn-validate:hover {
     transform: scale(1.05);
     box-shadow: 0px 6px 15px rgba(0,0,0,0.3);
     color: white;
 }
 
 /* Lien simple (sans style bouton) */
-a:not(.btn):not(.btn-logout):not(.btn-delete) {
+a:not(.btn):not(.btn-logout):not(.btn-delete):not(.btn-validate) {
     color: #007bff;
     background: none;
     box-shadow: none;

@@ -27,7 +27,7 @@ def get_db():
         return None
 
 # ====================================================================================================
-# 🏠 ROUTES
+# 🏠 ROUTES PRINCIPALES
 # ====================================================================================================
 @app.route("/")
 def accueil():
@@ -76,7 +76,7 @@ def commander(id_client):
     return render_template("commander.html", produits=produits, id_client=id_client)
 
 # ====================================================================================================
-# 🧺 PANIER & ACTIONS
+# 🧺 PANIER & PAIEMENT (TP Partie 2)
 # ====================================================================================================
 @app.route("/panier/<int:id_client>")
 def voir_panier(id_client):
@@ -112,26 +112,53 @@ def supprimer_panier(id_panier, id_client):
     cursor.close(); conn.close()
     return redirect(url_for("voir_panier", id_client=id_client))
 
+@app.route("/paiement/<int:id_client>", methods=["GET", "POST"])
+def paiement(id_client):
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT p.id as id_prod, p.prix, pa.quantite 
+        FROM panier pa JOIN produits p ON pa.id_produit = p.id WHERE pa.id_client = %s
+    """, (id_client,))
+    articles = cursor.fetchall()
+    total = sum(item['prix'] * item['quantite'] for item in articles)
+
+    if request.method == "POST":
+        # Simulation du paiement
+        cursor.execute("INSERT INTO commandes (id_client, date_commande, total) VALUES (%s, NOW(), %s)", (id_client, total))
+        id_cmd = cursor.lastrowid
+        for item in articles:
+            cursor.execute("INSERT INTO details_commandes (id_commande, id_produit, quantite, prix_unitaire) VALUES (%s, %s, %s, %s)",
+                           (id_cmd, item['id_prod'], item['quantite'], item['prix']))
+            cursor.execute("UPDATE produits SET stock = stock - %s WHERE id = %s", (item['quantite'], item['id_prod']))
+        cursor.execute("DELETE FROM panier WHERE id_client = %s", (id_client,))
+        conn.commit()
+        cursor.close(); conn.close()
+        return redirect(url_for("confirmation", id_client=id_client))
+        
+    cursor.close(); conn.close()
+    return render_template("paiement.html", id_client=id_client, total_panier=total)
+
+@app.route("/confirmation/<int:id_client>")
+def confirmation(id_client):
+    return render_template("confirmation.html", id_client=id_client)
+
 # ====================================================================================================
-# 🛡️ SIGNUP & VERIFICATION
+# 🛡️ SIGNUP & ADMIN
 # ====================================================================================================
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     if request.method == "POST":
         nom, prenom, email = request.form["nom"], request.form["prenom"], request.form["email"]
         password = request.form["password"]
-
         conn = get_db()
         cursor = conn.cursor(dictionary=True)
-        # Vérification unicité email
         cursor.execute("SELECT id FROM clients WHERE email = %s", (email,))
         if cursor.fetchone():
             cursor.close(); conn.close()
             return "Email déjà utilisé. <a href='/login'>Connectez-vous</a>"
-
         hashed_pw = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
         code = str(secrets.randbelow(900000) + 100000)
-
         cursor.execute("INSERT INTO clients (nom, prenom, email, password) VALUES (%s, %s, %s, %s)",
                        (nom, prenom, email, hashed_pw.decode('utf-8')))
         user_id = cursor.lastrowid

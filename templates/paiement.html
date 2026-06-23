@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Paiement</title>
+</head>
+
+<body>
+    <div class="commande-box" style="width: 500px;">
+        <h1>Paiement</h1>
+
+        {% if erreur %}
+        <p style="color:red; font-weight: bold;">{{ erreur }}</p>
+        {% endif %}
+
+        {% if total_panier > 0 %}
+
+        <h2>Total à payer : {{ total_panier }} €</h2>
+
+        <form method="POST">
+            <label>Nom du titulaire</label>
+            <input type="text" name="nom" required>
+
+            <label>Numéro de carte</label>
+            <input type="text" name="numero" maxlength="19" placeholder="1111 2222 3333 4444" required>
+
+            <label>Date d'expiration (MM/AA)</label>
+            <input type="text" name="expiration" placeholder="MM/AA" required>
+
+            <label>CVV</label>
+            <input type="text" name="cvv" maxlength="4" placeholder="123" required>
+
+            <button type="submit" class="btn-validate" style="width: 100%; margin-top: 20px;">
+                Valider le paiement
+            </button>
+        </form>
+
+        {% else %}
+        <p>Impossible de payer, votre panier est vide.</p>
+        {% endif %}
+
+        <div style="margin-top: 30px;">
+            <a href="/panier/{{ id_client }}" class="btn">Retour au panier</a>
+        </div>
+
+    </div>
+</body>
+
+</html>

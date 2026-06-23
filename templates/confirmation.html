@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Paiement Réussi</title>
+</head>
+
+<body>
+    <div class="center-form">
+        <div class="login-box">
+            <h2>Paiement Validé</h2>
+
+            <h1 style="color: #38ef7d; font-size: 60px; margin: 10px 0;">✔</h1>
+
+            <p>La transaction a été acceptée avec succès.</p>
+            <p>Ta commande est enregistrée et prête à être traitée.</p>
+
+            <div style="margin-top: 30px;">
+                <a href="/client/{{ id_client }}" class="btn">Retour à l'espace client</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
