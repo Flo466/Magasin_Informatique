@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Nos Produits</title>
+</head>
+
+<body>
+    <div class="commande-box">
+        <h1>Nos Produits</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Prix</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in produits %}
+                <tr>
+                    <td>{{ p.nom }}</td>
+                    <td>{{ p.prix }} €</td>
+                    <td>
+                        <form action="/ajouter_panier" method="POST">
+                            <input type="hidden" name="id_client" value="{{ id_client }}">
+                            <input type="hidden" name="id_produit" value="{{ p.id }}">
+                            <input type="number" name="quantite" value="1" min="1" max="{{ p.stock }}"
+                                style="width: 50px;">
+                            <button type="submit" class="btn">Ajouter</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        <a href="/client/{{ id_client }}" class="btn">Retour à mon espace</a>
+    </div>
+</body>
+
+</html>

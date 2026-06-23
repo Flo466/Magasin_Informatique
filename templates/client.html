@@ -8,28 +8,37 @@
 </head>
 
 <body>
+    <a href="/" class="btn-logout logout">Se déconnecter</a>
+
     <div class="commande-box">
         <h1>Espace Client</h1>
-        <a href="/">Se déconnecter</a>
 
-        <h3>Mes produits achetés</h3>
-        <table border="1">
-            <tr>
-                <th>Produit</th>
-                <th>Prix</th>
-                <th>Quantité</th>
-            </tr>
-            {% for p in produits %}
-            <tr>
-                <td>{{ p.nom }}</td>
-                <td>{{ p.prix }} €</td>
-                <td>{{ p.quantite }}</td>
-            </tr>
-            {% endfor %}
+        <h3>Historique des achats</h3>
+        {% if produits %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Produit</th>
+                    <th>Prix</th>
+                    <th>Qté</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in produits %}
+                <tr>
+                    <td>{{ p.nom }}</td>
+                    <td>{{ p.prix }} €</td>
+                    <td>{{ p.quantite }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
+        {% else %}
+        <p>Aucun achat enregistré pour le moment.</p>
+        {% endif %}
 
-        <div style="margin-top: 20px;">
-            <a href="/client/{{ id_client }}/commander" class="btn">Passer une nouvelle commande</a>
+        <div style="margin-top: 30px;">
+            <a href="/client/{{ id_client }}/commander" class="btn">Passer une commande</a>
             <br><br>
             <a href="{{ url_for('voir_panier', id_client=id_client) }}" class="btn">Voir mon Panier</a>
         </div>
