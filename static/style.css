@@ -1,5 +1,5 @@
 /* ==========================================
-   STYLE GLOBAL & STRUCTURE
+   GLOBAL STYLE & STRUCTURE
    ========================================== */
 body {
     font-family: Arial, sans-serif;
@@ -25,9 +25,9 @@ body.accueil {
 }
 
 /* ==========================================
-   BOUTONS & LIENS (Dégradés unifiés)
+   BUTTONS & LINKS (Unified Gradients)
    ========================================== */
-/* Style de base partagé par tous les boutons */
+/* Base style shared by all buttons */
 a.btn, button, .btn-logout, .btn-delete, .btn-validate {
     display: inline-block;
     padding: 12px 24px;
@@ -42,12 +42,12 @@ a.btn, button, .btn-logout, .btn-delete, .btn-validate {
     color: white;
 }
 
-/* Dégradé principal (Bleu/Violet) */
+/* Main gradient (Blue/Purple) */
 a.btn, button {
     background: linear-gradient(90deg, #6a11cb, #2575fc);
 }
 
-/* Dégradé déconnexion (Rose/Bleu) - Positionné en haut à droite */
+/* Logout gradient (Pink/Blue) - Positioned top right */
 .btn-logout {
     background: linear-gradient(90deg, #d534b5, #2575fc);
     padding: 8px 16px;
@@ -56,7 +56,7 @@ a.btn, button {
     right: 20px;
 }
 
-/* Dégradé suppression (Rouge/Rose) - Pour le panier */
+/* Delete gradient (Red/Pink) - For the cart */
 .btn-delete {
     background: linear-gradient(90deg, #d534b5, #c02163);
     padding: 6px 12px;
@@ -65,22 +65,22 @@ a.btn, button {
     color: white;
     border-radius: 8px;
     font-weight: bold;
-    display: inline-block; 
+    display: inline-block; /* Very important to keep it inside the table */
 }
 
-/* Dégradé validation (Vert dynamique) */
+/* Validation gradient (Dynamic green) */
 .btn-validate {
     background: linear-gradient(90deg, #38ef7d, #2575fc);
 }
 
-/* Effets Hover communs */
+/* Common Hover effects */
 a.btn:hover, button:hover, .btn-logout:hover, .btn-delete:hover, .btn-validate:hover {
     transform: scale(1.05);
     box-shadow: 0px 6px 15px rgba(0,0,0,0.3);
     color: white;
 }
 
-/* Lien simple (sans style bouton) */
+/* Simple link (without button style) */
 a:not(.btn):not(.btn-logout):not(.btn-delete):not(.btn-validate) {
     color: #007bff;
     background: none;
@@ -90,7 +90,7 @@ a:not(.btn):not(.btn-logout):not(.btn-delete):not(.btn-validate) {
 }
 
 /* ==========================================
-   COMPOSANTS UI
+   UI COMPONENTS
    ========================================== */
 .login-box, .commande-box {
     background: white;

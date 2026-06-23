@@ -27,7 +27,7 @@ def get_db():
         return None
 
 # ====================================================================================================
-# 🏠 ROUTES PRINCIPALES
+# 🏠 MAIN ROUTES
 # ====================================================================================================
 @app.route("/")
 def accueil():
@@ -76,7 +76,7 @@ def commander(id_client):
     return render_template("commander.html", produits=produits, id_client=id_client)
 
 # ====================================================================================================
-# 🧺 PANIER & PAIEMENT (TP Partie 2)
+# 🧺 CART & PAYMENT
 # ====================================================================================================
 @app.route("/panier/<int:id_client>")
 def voir_panier(id_client):
@@ -124,7 +124,7 @@ def paiement(id_client):
     total = sum(item['prix'] * item['quantite'] for item in articles)
 
     if request.method == "POST":
-        # Simulation du paiement
+        # Payment simulation
         cursor.execute("INSERT INTO commandes (id_client, date_commande, total) VALUES (%s, NOW(), %s)", (id_client, total))
         id_cmd = cursor.lastrowid
         for item in articles:
@@ -153,10 +153,13 @@ def signup():
         password = request.form["password"]
         conn = get_db()
         cursor = conn.cursor(dictionary=True)
+        
+        # Check email uniqueness
         cursor.execute("SELECT id FROM clients WHERE email = %s", (email,))
         if cursor.fetchone():
             cursor.close(); conn.close()
             return "Email déjà utilisé. <a href='/login'>Connectez-vous</a>"
+            
         hashed_pw = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
         code = str(secrets.randbelow(900000) + 100000)
         cursor.execute("INSERT INTO clients (nom, prenom, email, password) VALUES (%s, %s, %s, %s)",
