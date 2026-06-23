@@ -27,7 +27,8 @@ body.accueil {
 /* ==========================================
    BOUTONS & LIENS (Dégradés unifiés)
    ========================================== */
-a.btn, button, .btn-logout {
+/* Style de base partagé par tous les boutons */
+a.btn, button, .btn-logout, .btn-delete {
     display: inline-block;
     padding: 12px 24px;
     text-decoration: none;
@@ -46,23 +47,36 @@ a.btn, button {
     background: linear-gradient(90deg, #6a11cb, #2575fc);
 }
 
-/* Dégradé spécifique déconnexion (Rose/Rouge) */
+/* Dégradé déconnexion (Rose/Bleu) - Positionné en haut à droite */
 .btn-logout {
-    background: linear-gradient(90deg, #da1370, #2575fc);
+    background: linear-gradient(90deg, #d534b5, #2575fc);
     padding: 8px 16px;
     position: absolute;
     top: 20px;
     right: 20px;
 }
 
+/* Dégradé suppression (Rouge/Orange) - Pour le panier */
+.btn-delete {
+    background: linear-gradient(90deg, #d534b5, #c02163);
+    padding: 6px 12px;
+    font-size: 0.85em;
+    text-decoration: none;
+    color: white;
+    border-radius: 8px;
+    font-weight: bold;
+    display: inline-block; /* Très important pour qu'il reste dans le tableau */
+}
+
 /* Effets Hover communs */
-a.btn:hover, button:hover, .btn-logout:hover {
+a.btn:hover, button:hover, .btn-logout:hover, .btn-delete:hover {
     transform: scale(1.05);
     box-shadow: 0px 6px 15px rgba(0,0,0,0.3);
+    color: white;
 }
 
 /* Lien simple (sans style bouton) */
-a:not(.btn):not(.btn-logout) {
+a:not(.btn):not(.btn-logout):not(.btn-delete) {
     color: #007bff;
     background: none;
     box-shadow: none;

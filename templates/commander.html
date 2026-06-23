@@ -4,15 +4,31 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <title>Erreur Stock</title>
+    <title>Commander</title>
 </head>
 
 <body>
     <div class="commande-box">
-        <h1>Erreur : Stock insuffisant</h1>
-        <p>La quantité demandée dépasse le stock disponible.</p>
+        <h2>Passer une commande</h2>
 
-        <a href="/client/{{ id_client }}" class="btn">Retour à mon espace client</a>
+        <form action="/ajouter_panier" method="POST">
+            <input type="hidden" name="id_client" value="{{ id_client }}">
+
+            <label>Choisir un produit :</label>
+            <select name="id_produit" required>
+                {% for p in produits %}
+                <option value="{{ p.id }}">{{ p.nom }} - {{ p.prix }}€ (Stock: {{ p.stock }})</option>
+                {% endfor %}
+            </select>
+
+            <label>Quantité :</label>
+            <input type="number" name="quantite" value="1" min="1" required>
+
+            <button type="submit">Ajouter au panier</button>
+        </form>
+
+        <br>
+        <a href="/client/{{ id_client }}" class="btn">Retour espace client</a>
     </div>
 </body>
 

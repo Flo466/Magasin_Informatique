@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <div class="commande-box">
+    <div class="commande-box" style="width: 600px;">
         <h1>Votre Panier</h1>
 
         {% if articles %}
@@ -17,8 +17,9 @@
                 <tr>
                     <th>Produit</th>
                     <th>Prix</th>
-                    <th>Quantité</th>
+                    <th>Qté</th>
                     <th>Total</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,22 +29,27 @@
                     <td>{{ article.prix }} €</td>
                     <td>{{ article.quantite }}</td>
                     <td>{{ article.total_ligne }} €</td>
+                    <td>
+                        <a href="{{ url_for('supprimer_panier', id_panier=article.id, id_client=id_client) }}"
+                            class="btn-delete">Supprimer</a>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
 
-        <div style="margin-top: 20px;">
-            <a href="/paiement/{{ id_client }}">Procéder au paiement</a>
+        <div class="actions" style="margin-top: 20px;">
+            <a href="/paiement/{{ id_client }}" class="btn">Procéder au paiement</a>
         </div>
         {% else %}
         <p>Votre panier est vide.</p>
         {% endif %}
 
-        <br>
-        <a href="/client/{{ id_client }}/commander">Continuer mes achats</a>
-        <br>
-        <a href="/client/{{ id_client }}">Retour à mon espace client</a>
+        <div class="navigation" style="margin-top: 30px;">
+            <a href="/client/{{ id_client }}/commander" class="btn">Continuer mes achats</a>
+            <br><br>
+            <a href="/client/{{ id_client }}" class="btn">Retour à mon espace</a>
+        </div>
     </div>
 </body>
 

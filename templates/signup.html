@@ -1,28 +1,29 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 
 <head>
+    <meta charset="UTF-8">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <title>Inscription</title>
+    <title>Inscription - Magasin Informatique</title>
 </head>
 
 <body>
     <div class="center-form">
         <div class="login-box">
             <h2>Inscription</h2>
-            <form method="POST" id="signupForm">
-                <input type="text" name="nom" placeholder="Nom" required><br>
-                <input type="text" name="prenom" placeholder="Prénom" required><br>
-                <input type="email" name="email" placeholder="Email" required><br>
-                <input type="text" name="adresse" placeholder="Adresse"><br>
-                <input type="tel" name="telephone" placeholder="Téléphone"><br>
+            <form method="POST">
+                <input type="text" name="nom" placeholder="Nom" required>
+                <input type="text" name="prenom" placeholder="Prénom" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="text" name="adresse" placeholder="Adresse">
+                <input type="tel" name="telephone" placeholder="Téléphone">
 
                 <input type="password" id="password" name="password" placeholder="Mot de passe" required>
-                <div id="password-hint" style="font-size: 12px; color: #666; margin-bottom: 10px;">
+                <div id="password-hint" style="font-size: 12px; color: #666; margin-bottom: 15px;">
                     Min. 8 caractères, une majuscule et un chiffre.
                 </div>
 
-                <button type="submit" id="submitBtn">S'inscrire</button>
+                <button type="submit" class="btn">S'inscrire</button>
             </form>
             <p>Déjà un compte ? <a href="/login">Connectez-vous</a></p>
         </div>
@@ -42,7 +43,7 @@
                 hint.textContent = "Min. 8 caractères, une majuscule et un chiffre.";
                 hint.style.color = "#666";
             } else if (hasUpper && hasDigit && isLong) {
-                hint.textContent = "Mot de passe valide !";
+                hint.textContent = "Mot de passe fort !";
                 hint.style.color = "green";
             } else {
                 hint.textContent = "Faible : " +
