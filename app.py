@@ -190,6 +190,45 @@ def signup():
             
     return render_template("signup.html")
 
+# ====================================================================================================
+# 🧺 /////////////////////////////////////////// CART ROUTES //////////////////////////////////////////
+# ====================================================================================================
+
+@app.route("/panier/<int:id_client>")
+def voir_panier(id_client):
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True, buffered=True)
+    cursor.execute("""
+        SELECT p.nom, p.prix, pa.quantite, (p.prix * pa.quantite) as total_ligne
+        FROM panier pa
+        JOIN produits p ON pa.id_produit = p.id
+        WHERE pa.id_client = %s
+    """, (id_client,))
+    articles = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template("panier.html", articles=articles, id_client=id_client)
+
+@app.route("/ajouter_panier", methods=["POST"])
+def ajouter_panier():
+    id_client = request.form["id_client"]
+    id_produit = request.form["id_produit"]
+    quantite = request.form["quantite"]
+    
+    conn = get_db()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("INSERT INTO panier (id_client, id_produit, quantite) VALUES (%s, %s, %s)", 
+                       (id_client, id_produit, quantite))
+        conn.commit()
+    except Exception as e:
+        return f"Error adding to cart: {e}"
+    finally:
+        cursor.close()
+        conn.close()
+        
+    return redirect("/panier")
+
 
 # ====================================================================================================
 # ✅ ///////////////////////////////////////// CODE VERIFICATION //////////////////////////////////////

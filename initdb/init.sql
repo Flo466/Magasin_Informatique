@@ -1,5 +1,5 @@
 -- Adminer 5.4.2 MySQL 8.0.46 dump
--- Initialization script for magasin_informatique
+-- Initialization script for magasin_informatique (TP7 Updated)
 
 SET NAMES utf8mb4;
 SET time_zone = '+00:00';
@@ -39,6 +39,19 @@ CREATE TABLE IF NOT EXISTS `produits` (
   `stock` INT NOT NULL DEFAULT 0,
   `image` VARCHAR(100),
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- -----------------------------------------------------
+-- Table panier (TP7 Part 1)
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `panier` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id_client` INT UNSIGNED NOT NULL,
+  `id_produit` INT UNSIGNED NOT NULL,
+  `quantite` INT NOT NULL DEFAULT 1,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_panier_client` FOREIGN KEY (`id_client`) REFERENCES `clients` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_panier_produit` FOREIGN KEY (`id_produit`) REFERENCES `produits` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- -----------------------------------------------------
@@ -83,7 +96,6 @@ CREATE TABLE IF NOT EXISTS `email_verification` (
 -- -----------------------------------------------------
 -- Initial Data
 -- -----------------------------------------------------
--- Hash for '1234' is: $2b$12$R9h/cIPz0gi.URNNX3kh2OPST9/zBkqquzaQA0T5v99/z1rY715.W
 INSERT INTO `clients` (`nom`, `prenom`, `email`, `password`, `adresse`, `telephone`, `is_verified`) VALUES
 ('Dupont', 'Marie', 'marie@gmail.com', '$2b$12$R9h/cIPz0gi.URNNX3kh2OPST9/zBkqquzaQA0T5v99/z1rY715.W', 'Paris', '0600000001', 1),
 ('Martin', 'Paul', 'paul@gmail.com', '$2b$12$R9h/cIPz0gi.URNNX3kh2OPST9/zBkqquzaQA0T5v99/z1rY715.W', 'Evry', '0600000002', 1),
