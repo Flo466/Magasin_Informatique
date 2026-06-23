@@ -1,5 +1,5 @@
 -- Adminer 5.4.2 MySQL 8.0.46 dump
--- Nettoyage et optimisation de la structure
+-- Initialization script for magasin_informatique
 
 SET NAMES utf8mb4;
 SET time_zone = '+00:00';
@@ -12,8 +12,10 @@ COLLATE utf8mb4_0900_ai_ci;
 
 USE `magasin_informatique`;
 
+-- -----------------------------------------------------
 -- Table clients
-CREATE TABLE `clients` (
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `clients` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `nom` VARCHAR(50) NOT NULL,
   `prenom` VARCHAR(50) NOT NULL,
@@ -26,8 +28,10 @@ CREATE TABLE `clients` (
   UNIQUE KEY `idx_email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+-- -----------------------------------------------------
 -- Table produits
-CREATE TABLE `produits` (
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `produits` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `nom` VARCHAR(100) NOT NULL,
   `description` TEXT,
@@ -37,8 +41,10 @@ CREATE TABLE `produits` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+-- -----------------------------------------------------
 -- Table commandes
-CREATE TABLE `commandes` (
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `commandes` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `id_client` INT UNSIGNED NOT NULL,
   `date_commande` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -48,8 +54,10 @@ CREATE TABLE `commandes` (
   CONSTRAINT `fk_commandes_client` FOREIGN KEY (`id_client`) REFERENCES `clients` (`id`) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+-- -----------------------------------------------------
 -- Table details_commandes
-CREATE TABLE `details_commandes` (
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `details_commandes` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `id_commande` INT UNSIGNED NOT NULL,
   `id_produit` INT UNSIGNED NOT NULL,
@@ -60,8 +68,10 @@ CREATE TABLE `details_commandes` (
   CONSTRAINT `fk_details_produit` FOREIGN KEY (`id_produit`) REFERENCES `produits` (`id`) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+-- -----------------------------------------------------
 -- Table email_verification
-CREATE TABLE `email_verification` (
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `email_verification` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `id_client` INT UNSIGNED NOT NULL,
   `token` VARCHAR(255) NOT NULL,
@@ -69,5 +79,24 @@ CREATE TABLE `email_verification` (
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_email_client` FOREIGN KEY (`id_client`) REFERENCES `clients` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- -----------------------------------------------------
+-- Initial Data
+-- -----------------------------------------------------
+-- Hash for '1234' is: $2b$12$R9h/cIPz0gi.URNNX3kh2OPST9/zBkqquzaQA0T5v99/z1rY715.W
+INSERT INTO `clients` (`nom`, `prenom`, `email`, `password`, `adresse`, `telephone`, `is_verified`) VALUES
+('Dupont', 'Marie', 'marie@gmail.com', '$2b$12$R9h/cIPz0gi.URNNX3kh2OPST9/zBkqquzaQA0T5v99/z1rY715.W', 'Paris', '0600000001', 1),
+('Martin', 'Paul', 'paul@gmail.com', '$2b$12$R9h/cIPz0gi.URNNX3kh2OPST9/zBkqquzaQA0T5v99/z1rY715.W', 'Evry', '0600000002', 1),
+('Benali', 'Sofia', 'sofia@gmail.com', '$2b$12$R9h/cIPz0gi.URNNX3kh2OPST9/zBkqquzaQA0T5v99/z1rY715.W', 'Corbeil', '0600000003', 1);
+
+INSERT INTO `produits` (`nom`, `description`, `prix`, `stock`, `image`) VALUES
+('Ordinateur portable HP', 'PC portable 15 pouces', 699.99, 10, 'hp.jpg'),
+('Souris Logitech', 'Souris sans fil', 19.99, 50, 'souris.jpg'),
+('Clavier Gamer', 'Clavier RGB mécanique', 49.99, 25, 'clavier.jpg'),
+('Écran Samsung', 'Écran 24 pouces Full HD', 129.99, 15, 'ecran.jpg');
+
+INSERT INTO `commandes` (`id_client`, `date_commande`, `total`, `statut`) VALUES
+(1, '2026-06-01 10:00:00', 719.98, 'En attente'),
+(2, '2026-06-01 14:30:00', 49.99, 'Validée');
 
 SET foreign_key_checks = 1;

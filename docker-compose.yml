@@ -5,6 +5,9 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ton_mot_de_passe
       MYSQL_DATABASE: magasin_informatique
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+      - ./initdb:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       timeout: 5s
@@ -22,7 +25,7 @@ services:
     environment:
       - DB_HOST=db
 
-  adminer: # <-- Service de gestion de la base de donnée (GUI)
+  adminer:
     image: adminer
     restart: always
     ports:
