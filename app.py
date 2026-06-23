@@ -13,7 +13,7 @@ app = Flask(__name__)
 db_config = {
     "host": os.getenv("DB_HOST", "db"),
     "user": "root",
-    "password": "ton_mot_de_passe",
+    "password": "mdpMagasinInformatique",
     "database": "magasin_informatique"
 }
 

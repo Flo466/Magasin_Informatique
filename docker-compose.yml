@@ -3,7 +3,7 @@ services:
     image: mysql:8.0
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ton_mot_de_passe
+      MYSQL_ROOT_PASSWORD: mdpMagasinInformatique
       MYSQL_DATABASE: magasin_informatique
     volumes:
       - ./mysql_data:/var/lib/mysql

@@ -46,7 +46,7 @@ Once the containers are up and running, you can access the services via your web
     * *System:* MySQL
     * *Server:* `db`
     * *Username:* `root`
-    * *Password:* `ton_mot_de_passe`
+    * *Password:* `mdpMagasinInformatique`
     * *Database:* `magasin_informatique`
 
 ## 🧪 Testing the Application
